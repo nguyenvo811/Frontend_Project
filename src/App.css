@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  
 }
 
 .App-logo {
@@ -36,3 +36,29 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* .slick-arrow::before{
+  color: black !important;
+  transition: all .1s ease-in-out;
+} */
+
+
+/* .slick-slider{
+  overflow: hidden;
+} */
+
+/* .slick-slider { 
+  box-sizing: border-box;
+  width: 500px;
+}
+
+/* .slick-slide img {
+  width: 100% !important;
+  height: auto;
+
+} */ 
+
+/* .slick-prev:before, .slick-next:before {
+  color: #09529b !important;
+} */
