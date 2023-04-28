@@ -48,7 +48,12 @@ export default function Card() {
 			<div key={index} id={val._id} class="relative flex w-[250px] max-sm:w-[190px] max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md duration-500 transform sm:hover:-translate-y-2 sm:hover:shadow-xl">
 				<a class="relative mx-3 mt-3 flex justify-center h-[200px] overflow-hidden rounded-xl" onClick={() => handleClickDetails(val)}>
 					<img class="object-cover" src={val.image} alt="product image" />
-					<span class={`absolute top-0 left-0 m-2 rounded-full bg-gray-900 opacity-50 px-2 text-center text-sm font-medium text-white ${val.onSale === "" ? "hidden" : ""}`}>{val.onSale}% OFF</span>
+					{
+						val.onSale === 0?
+							null 
+							:
+							<span class={`absolute top-0 left-0 m-2 rounded-full bg-gray-900 opacity-50 px-2 text-center text-sm font-medium text-white ${val.onSale === "" ? "hidden" : ""}`}>{val.onSale}% OFF</span>
+					}	
 				</a>
 				<div class="mt-4 px-5 pb-5 cursor-pointer" >
 					<a onClick={() => handleClickDetails(val)}>

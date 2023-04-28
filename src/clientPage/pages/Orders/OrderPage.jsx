@@ -6,6 +6,8 @@ import Add from '@mui/icons-material/Add';
 import { decodeJwt, getOrders } from "../../../api/apiServices";
 import { FormatDateTimeDislay } from "../../../assets/FormatDateTimeDisplay";
 import FormatPrice from "../../components/FormatPrice/FormatPrice";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import OrderDetails from "./OrderDetails";
 
 export default function OrderPage() {
   
@@ -22,6 +24,7 @@ export default function OrderPage() {
 
 const OrderTable = function() {
 	const [tableData, setTableData] = useState([]);
+  const [openDetailsModal, setOpenDetailsModal] = useState(false);
   useEffect(() => {
     if (decodeJwt ()) {
       getOrders()
@@ -61,18 +64,19 @@ const OrderTable = function() {
 		{
       accessorFn: (originalRow) => <FormatDateTimeDislay date={originalRow?.createdAt} />,
 			id: 'createdAt',
-      header: 'Create At',
+      header: 'Buy At',
       size: 140,
     },
-		{
-      accessorFn: (originalRow) => <FormatDateTimeDislay date={originalRow?.updatedAt} />,
-			id: 'updatedAt',
-      header: 'Update At',
-      size: 140,
-    },
+		// {
+    //   accessorFn: (originalRow) => <FormatDateTimeDislay date={originalRow?.updatedAt} />,
+		// 	id: 'updatedAt',
+    //   header: 'Update At',
+    //   size: 140,
+    // },
   ], []);
 	
 	return (
+    <>
 		<MaterialReactTable
 			displayColumnDefOptions={{
 				'mrt-row-actions': {
@@ -84,8 +88,34 @@ const OrderTable = function() {
 			}}
 			columns={columns}
 			data={tableData || []}
-			enableEditing={false}
+			enableEditing
 			enableColumnOrdering
+      renderRowActions={({ row, table }) => (
+        <Box sx={{ display: 'flex', gap: '1rem', WebkitJustifyContent: "center" }}>
+          <Tooltip arrow placement="left" title="Edit">
+            <IconButton onClick={() => setOpenDetailsModal(true)}> 
+              <button
+                type="button"
+                class="text-blue-700"
+                >
+                <VisibilityIcon />
+              </button>
+            </IconButton>
+          </Tooltip>
+          {/* <Tooltip arrow placement="right" title="Delete">
+            <IconButton color="error" onClick={() => {return handleShowDeleteModal(row)}}>
+              <button
+                type="button"
+                class="text-red-700"
+                >
+                <HiTrash size='1.5rem' />
+              </button>
+            </IconButton>
+          </Tooltip> */}
+        </Box>
+      )}
 		/>
+    <OrderDetails open={openDetailsModal} onClose={() => setOpenDetailsModal(false)} />
+    </>
   )
 }

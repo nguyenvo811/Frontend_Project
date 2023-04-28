@@ -159,6 +159,16 @@ const searchProducts = async (data) => {
   return await axios.get("http://localhost:8081/search-products", data)
 }
 
+const addToWishLish = async (id, isLiked) => {
+  const data = {
+    user: decodeJwt().id,
+    product: id,
+    isLiked: isLiked
+  }
+  console.log(data)
+  return await axios.post("http://localhost:8081/add-to-wish-list", data, config)
+}
+
 const getFavProduct = async () => {
   return await axios.get("http://localhost:8081/view-wish-list", decodeJwt().id, config)
 }
@@ -191,5 +201,6 @@ export {
   deleteOrder, 
   updateOrder,
   searchProducts,
+  addToWishLish,
   getFavProduct
 }

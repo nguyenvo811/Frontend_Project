@@ -81,7 +81,7 @@ export default function UpdateOrderModal(props) {
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
     >
-      <DialogTitle id="scroll-dialog-title">Update Product
+      <DialogTitle id="scroll-dialog-title">Update Order
       {onClose ? (
           <IconButton
               aria-label="close"
@@ -155,9 +155,21 @@ export default function UpdateOrderModal(props) {
                       id="address"
                       name="address"
                       placeholder="Address"
-                      rows={6}
+                      rows={3}
                       className="mt-1"
                       value={data.address}
+                    />
+                  </div>
+                  <div className="lg:col-span-2">
+                    <Label htmlFor="note">Note</Label>
+                    <Textarea
+                      readOnly
+                      id="note"
+                      name="note"
+                      placeholder="Note"
+                      rows={3}
+                      className="mt-1"
+                      value={data.note}
                     />
                   </div>
                   <div>

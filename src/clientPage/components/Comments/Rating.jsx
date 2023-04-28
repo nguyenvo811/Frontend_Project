@@ -1,5 +1,6 @@
 import {React, useState} from "react";
 import Comments from "./Comments";
+import a from "../../../assets/a.jpg"
 
 export default function Rating(){
   return (
@@ -11,7 +12,7 @@ export default function Rating(){
             <div class="flex-shrink-0">
                 <div class="inline-block relative">
                   <div class="relative w-16 h-16 rounded-full overflow-hidden">
-                    <img class="absolute top-0 left-0 w-full h-full bg-cover object-fit object-cover" src="https://picsum.photos/id/646/200/200" alt="Profile picture" />
+                    <img class="absolute top-0 left-0 w-full h-full bg-cover object-fit object-cover" src={a} alt="Profile picture" />
                     <div class="absolute top-0 left-0 w-full h-full rounded-full shadow-inner"></div>
                   </div>
                   <svg class="fill-current text-white bg-green-600 rounded-full p-1 absolute bottom-0 right-0 w-6 h-6 -mx-1 -my-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -21,8 +22,8 @@ export default function Rating(){
             </div> 
             <div className="grid">
               <p class="flex items-baseline">
-                <span class="text-gray-600 font-bold">Mary T.</span>
-                <span class="ml-2 text-green-600 text-xs">Verified Buyer</span>
+                <span class="text-gray-600 font-bold">Nguyen Vo</span>
+                {/* <span class="ml-2 text-green-600 text-xs">Verified Buyer</span> */}
               </p>
               <div class="flex items-center mt-1 text-yellow-300">
                 <svg class="w-4 h-4 fill-current text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
@@ -30,17 +31,17 @@ export default function Rating(){
                 <svg class="w-4 h-4 fill-current text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
                 <svg class="w-4 h-4 fill-current text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
                 <svg class="w-4 h-4 fill-current text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
-                <p class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">4.95 out of 5</p>
+                <p class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">5 out of 5</p>
               </div>
               <p class="mt-1 text-sm text-gray-600 dark:text-gray-400"><time pubdate datetime="2022-02-08"
-                title="February 8th, 2022">Feb. 8, 2022</time></p>
+                title="February 8th, 2022">Apr. 27, 2023</time></p>
             </div>
           </div>
-          <div>
-            <span class="font-bold">Sapien consequat eleifend!</span>
-            <p class="mt-1">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          <div className="pb-4">
+            {/* <span class="font-bold">Sapien consequat eleifend!</span> */}
+            <p class="mt-1">Nice product!</p>
           </div>
-          <div class="flex items-center justify-between mt-4 text-sm text-gray-600 fill-current">
+          {/* <div class="flex items-center justify-between mt-4 text-sm text-gray-600 fill-current">
             <div class="flex items-center space-x-4">
               <button type="button"
                   class="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400">
@@ -58,7 +59,7 @@ export default function Rating(){
                 <span class="ml-2">10</span>
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

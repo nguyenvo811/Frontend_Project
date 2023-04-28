@@ -4,14 +4,22 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { Label, Select, Textarea, TextInput } from "flowbite-react";
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { getFavProduct } from '../../api/apiServices';
 import { Box, Button } from '@mui/joy';
-import FormatPrice from '../components/FormatPrice/FormatPrice';
+import FormatPrice from '../../../clientPage/components/FormatPrice/FormatPrice';
 
-export default function WishListModal(props) {
-  const { open, onClose } = props;
+export default function OrderDetails(props) {
+  const { open, onClose, data, setData, row, tableData, setTableData } = props;
+
+  const formatPrice = (price) => {
+    return Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 2,
+    }).format(price);
+  }
 
   const descriptionElementRef = useRef(null);
   useEffect(() => {
@@ -23,19 +31,15 @@ export default function WishListModal(props) {
     }
   }, [open]);
 
-	// const [products, setProduct] = useState([])
+  const formatDate = (date) => {
+    const formattedDate = new Date(date);
+    const year = formattedDate.getFullYear();
+    const month = String(formattedDate.getMonth() + 1).padStart(2, "0");
+    const day = String(formattedDate.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
 
-	useEffect(() => {
-		// getFavProduct()
-		// .then(res => {
-		// 	setProduct(res.data.data)
-		// })
-		// .catch(err => {
-		// 	console.log(err)
-		// })
-	}, [])
-
-	const handleRemoveProduct = useCallback((id) => {
+  const handleRemoveProduct = useCallback((id) => {
     // deleteProductFromCart(id)
     //   .then(res => {
     //     console.log(res)
@@ -45,30 +49,24 @@ export default function WishListModal(props) {
     //     console.log(error)
     //   })
   }, [])
-
+  
   const products = {
     wishListItem: [
        {
         _id: "1",
         image: "https://images.samsung.com/is/image/samsung/p6pim/vn/2202/gallery/vn-galaxy-s22-s901-sm-s901eidgxxv-530762309?$650_519_PNG$",
         productName: "Samsung S22",
-        price: 2300
+        price: 675
       },
-      {
-        _id: "2",
-        image: "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-den-thumb-600x600.jpg",
-        productName: "iPhone 14",
-        price: 2500
-      },
-    ]
+    ],
+    subTotal: 675
   }
-  console.log(products)
 
-	const productsFav= products.wishListItem.map((val, index) => {
+  const productsFav= products.wishListItem.map((val, index) => {
     return (
       <div key={index} class="pb-6 mb-2 rounded-md border px-6 border-gray-900">
         <div className="flex md:items-center md:justify-center text-sm font-medium mt-6 gap-4">
-          <div className="h-[160px] w-[300px] max-sm:w-[300px]" >
+          <div className="h-[140px] w-[200px] max-sm:w-[300px]" >
             <img className="w-full h-full object-cover rounded-lg" src={val.image} />
           </div> 
           <div className="grid w-full md:grid-cols-2 gap-2 break-all justify-between md:items-center">
@@ -81,15 +79,6 @@ export default function WishListModal(props) {
               <strong className="text-gray-700"><FormatPrice price={val.price}/></strong>
             </div>
           </div>
-          <IconButton
-                aria-label="close"
-                onClick={() => handleRemoveProduct(val._id)}
-                sx={{
-                  color: (theme) => theme.palette.grey[500],
-                }}
-              >
-                <CloseIcon fontSize="small"/>
-            </IconButton>
         </div>
       </div>
     )
@@ -104,7 +93,7 @@ export default function WishListModal(props) {
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
     >
-      <DialogTitle id="scroll-dialog-title">Favorite list
+      <DialogTitle id="scroll-dialog-title">Order Details
       {onClose ? (
           <IconButton
               aria-label="close"
@@ -126,9 +115,22 @@ export default function WishListModal(props) {
           ref={descriptionElementRef}
           tabIndex={-1}
         >
-          {productsFav}
+            {productsFav}
+            <div class="grid justify-end items-center font-bold ">
+            <span class="title-font font-bold text-2xl text-red-300">Total: <FormatPrice price={products.subTotal}/></span>
+        </div>
         </DialogContentText>
       </DialogContent>
+      <DialogActions>
+        <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end', pt: 2 }}>
+          <Button variant="plain" color="neutral" onClick={() => onClose()}>
+            Cancel
+          </Button>
+          {/* <Button variant="solid" color="primary" onClick={() => onClose()}>
+            Confrim
+          </Button> */}
+        </Box>
+      </DialogActions>
     </Dialog>
   );
 }

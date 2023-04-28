@@ -1,4 +1,5 @@
 import {React, useState} from "react";
+import a from "../../../assets/a.jpg"
 
 export default function Comments() {
 	const [rating, setRating] = useState(0);
@@ -34,7 +35,7 @@ export default function Comments() {
 				<div class="flex-shrink-0">
 					<div class="inline-block relative">
 						<div class="relative w-16 h-16 rounded-full overflow-hidden">
-							<img class="absolute top-0 left-0 w-full h-full bg-cover object-fit object-cover" src="https://picsum.photos/id/646/200/200" alt="Profile picture" />
+							<img class="absolute top-0 left-0 w-full h-full bg-cover object-fit object-cover" src={a} alt="Profile picture" />
 							<div class="absolute top-0 left-0 w-full h-full rounded-full shadow-inner"></div>
 						</div>
 						<svg class="fill-current text-white bg-green-600 rounded-full p-1 absolute bottom-0 right-0 w-6 h-6 -mx-1 -my-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -44,11 +45,10 @@ export default function Comments() {
 				</div> 
 				<div className="grid">
 					<p class="flex items-baseline">
-						<span class="text-gray-600 font-bold">Mary T.</span>
-						<span class="ml-2 text-green-600 text-xs">Verified Buyer</span>
+						<span class="text-gray-600 font-bold">Nguyen Vo</span>
 					</p>
 					<p class="mt-1 text-sm text-gray-600 dark:text-gray-400"><time pubdate datetime="2022-02-08"
-						title="February 8th, 2022">Feb. 8, 2022</time></p>
+						title="February 8th, 2022">Apr. 27, 2023</time></p>
 				</div>
 			</div>
 			<StarRating />

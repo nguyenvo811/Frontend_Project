@@ -5,7 +5,8 @@ import { HeartSwitch } from "@anatoliygatt/heart-switch";
 import { useLocation } from "react-router-dom";
 import FormatPrice from "../../components/FormatPrice/FormatPrice";
 import queryString from "query-string";
-import { addToCart, searchProduct } from "../../../api/apiServices";
+import { addToCart, searchProduct, addToWishLish } from "../../../api/apiServices";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 export default function ProductDetail() {
   const [fav, setFav] = useState(false);
@@ -34,6 +35,16 @@ export default function ProductDetail() {
 		addToCart(id, number).then(res => {console.log(res)}).then(err => console.log(err))
 	}
 
+  const handleAddToWishLish = async (id, isLiked) => {
+    addToWishLish(id, isLiked)
+    .then(res => {
+      console.log(res.data.data)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
+
   console.log(product.image)
   
   return (
@@ -52,7 +63,7 @@ export default function ProductDetail() {
                   <svg class="w-4 h-4 fill-current text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
                   <svg class="w-4 h-4 fill-current text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
                   <svg class="w-4 h-4 fill-current text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
-                  <span class="text-gray-500 ml-3 underline cursor-pointer hover:text-gray-900">4 Reviews</span>
+                  <span class="text-gray-500 ml-3 underline cursor-pointer hover:text-gray-900">1 Reviews</span>
                 </div>
                 <span class="flex ml-3 pl-3 py-2 border-l-2 border-gray-200">
                   <a class="text-gray-500">
@@ -82,23 +93,10 @@ export default function ProductDetail() {
                   onClick={() => handleAddToCart(product._id, 1)}
                   class="flex ml-auto text-white transition-none bg-teal-500 hover:bg-teal-600 sm:mt-0 sm:w-auto sm:flex-shrink-0 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">Add to cart</button>
                 <span 
+                  // onClick={() => handleAddToWishLish(product._id, setFav(!fav))}
+                  
                   className="rounded-full w-10 h-10 p-0 border-0 inline-flex items-center justify-center ml-4">
-                  <HeartSwitch
-                      id="heart-switch"
-                      size="sm"
-                      inactiveTrackFillColor="#d1d1d1"
-                      inactiveTrackStrokeColor="#d1d1d1"
-                      activeTrackFillColor="#ff708f"
-                      activeTrackStrokeColor="#ff4e74"
-                      inactiveThumbColor="#ffffff"
-                      activeThumbColor="#ffffff"
-                      aria-label="Favourite"
-                      autoFocus={false}
-                      checked={fav}
-                      onChange={(event) => {
-                        setFav(event.target.checked);
-                      }}
-                    />
+                  <FavoriteBorderIcon />
                 </span>
               </div>
             </div>
