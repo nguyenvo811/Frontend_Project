@@ -8,6 +8,7 @@ import { decodeJwt, getProducts, searchProducts, viewProfile } from "../../api/a
 import slug from "../../resources/slug";
 import logo from "../../assets/logo.png";
 import WishListModal from "../pages/WishListModal";
+import EditProfileModal from "../pages/EditProfileModal";
 
 
 export default function Header() {
@@ -19,6 +20,7 @@ export default function Header() {
   const [isSignIn, setIsSignIn] = useState(false);
   const handleShow = () => setShowSearch(!showSearch);
   const [products, setProduct] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
 
   const [openFavModal, setOpenFavModal] = useState(false);
 
@@ -133,6 +135,7 @@ export default function Header() {
                 </div>
                 <div className="ml-4">
                 <WishListModal open={openFavModal} onClose={() => setOpenFavModal(false)}/>
+                <EditProfileModal open={openModal} onClose={() => setOpenModal(false)} data={profile} setData={setProfile} />
                   { !isSignIn?
                     <SignInAndSignUpPage />
                     :
@@ -169,7 +172,7 @@ export default function Header() {
                             </>
                           }      
                           <li>
-                            <a className="cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Edit profile</a>
+                            <a onClick={() => setOpenModal(true)} className="cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Edit profile</a>
                           </li>
                           <li>
                             <a onClick={() => handleLogOut()}
@@ -262,6 +265,8 @@ const SearchBar = function({ placeholder, data, onClose }) {
     onClose()
     clearInput()
   }
+
+  // search
 
   const [word, setWord] = useState("");
 

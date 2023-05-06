@@ -6,7 +6,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { getFavProduct } from '../../api/apiServices';
+import { deleteProductFromWishList, viewWishList } from '../../api/apiServices';
 import { Box, Button } from '@mui/joy';
 import FormatPrice from '../components/FormatPrice/FormatPrice';
 
@@ -23,67 +23,50 @@ export default function WishListModal(props) {
     }
   }, [open]);
 
-	// const [products, setProduct] = useState([])
+	const [products, setProducts] = useState([])
 
 	useEffect(() => {
-		// getFavProduct()
-		// .then(res => {
-		// 	setProduct(res.data.data)
-		// })
-		// .catch(err => {
-		// 	console.log(err)
-		// })
+		viewWishList()
+		.then(res => {
+			setProducts(res.data.data)
+		})
+		.catch(err => {
+			console.log(err)
+		})
 	}, [])
 
-	const handleRemoveProduct = useCallback((id) => {
-    // deleteProductFromCart(id)
-    //   .then(res => {
-    //     console.log(res)
-    //     setProducts([...res.data.data], products)
-    //   })
-    //   .catch(error => {
-    //     console.log(error)
-    //   })
-  }, [])
+	const handleRemoveProduct = (id) => {
+    console.log(id)
+    deleteProductFromWishList(id)
+      .then(res => {
+        console.log(res)
+        // setProducts([...res.data.data], products)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  } 
 
-  const products = {
-    wishListItem: [
-       {
-        _id: "1",
-        image: "https://images.samsung.com/is/image/samsung/p6pim/vn/2202/gallery/vn-galaxy-s22-s901-sm-s901eidgxxv-530762309?$650_519_PNG$",
-        productName: "Samsung S22",
-        price: 2300
-      },
-      {
-        _id: "2",
-        image: "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-den-thumb-600x600.jpg",
-        productName: "iPhone 14",
-        price: 2500
-      },
-    ]
-  }
-  console.log(products)
-
-	const productsFav= products.wishListItem.map((val, index) => {
+	const productsFav= products?.wishListItem?.map((val, index) => {
     return (
       <div key={index} class="pb-6 mb-2 rounded-md border px-6 border-gray-900">
         <div className="flex md:items-center md:justify-center text-sm font-medium mt-6 gap-4">
           <div className="h-[160px] w-[300px] max-sm:w-[300px]" >
-            <img className="w-full h-full object-cover rounded-lg" src={val.image} />
+            <img className="w-full h-full object-cover rounded-lg" src={val.product.image} />
           </div> 
           <div className="grid w-full md:grid-cols-2 gap-2 break-all justify-between md:items-center">
             <div>
               <h2 className="max-sm:hidden">Product Name</h2>
-              <span className="text-gray-700 max-sm:font-bold max-sm:text-lg font-bold">{val.productName}</span>
+              <span className="text-gray-700 max-sm:font-bold max-sm:text-lg font-bold">{val.product.productName}</span>
             </div>
             <div>
               <h2 className="max-sm:hidden">Price</h2>
-              <strong className="text-gray-700"><FormatPrice price={val.price}/></strong>
+              <strong className="text-gray-700"><FormatPrice price={val.product.price}/></strong>
             </div>
           </div>
           <IconButton
                 aria-label="close"
-                onClick={() => handleRemoveProduct(val._id)}
+                onClick={() => handleRemoveProduct(val.product._id)}
                 sx={{
                   color: (theme) => theme.palette.grey[500],
                 }}

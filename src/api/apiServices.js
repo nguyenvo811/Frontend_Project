@@ -169,8 +169,36 @@ const addToWishLish = async (id, isLiked) => {
   return await axios.post("http://localhost:8081/add-to-wish-list", data, config)
 }
 
-const getFavProduct = async () => {
-  return await axios.get("http://localhost:8081/view-wish-list", decodeJwt().id, config)
+const viewWishList = async () => {
+  const data = {
+    user: decodeJwt().id
+  }
+  return await axios.get("http://localhost:8081/view-wish-list", {headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${JSON.parse(localStorage.getItem("Authentication"))}`
+  }})
+}
+
+const deleteProductFromWishList = async (id) => {
+  const data = {
+    product: id
+  }
+  console.log(data)
+  return await axios.delete("http://localhost:8081/delete-from-wish-list", {headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${JSON.parse(localStorage.getItem("Authentication"))}`
+  }, data})
+}
+
+const createComment = async (id, comment, rating) => {
+  const data = {
+    product: id,
+    user: decodeJwt().id,
+    comment: comment,
+    rating: rating
+  }
+  console.log(data)
+  return await axios.post("http://localhost:8081/create-comment", data, config)
 }
 
 export {
@@ -202,5 +230,7 @@ export {
   updateOrder,
   searchProducts,
   addToWishLish,
-  getFavProduct
+  viewWishList,
+  deleteProductFromWishList,
+  createComment
 }

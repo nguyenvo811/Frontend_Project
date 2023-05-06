@@ -1,9 +1,33 @@
-import {React, useState} from "react";
-import a from "../../../assets/a.jpg"
+import {React, useEffect, useState} from "react";
+import a from "../../../assets/a.jpg";
+import { viewProfile, decodeJwt, createComment } from "../../../api/apiServices";
 
-export default function Comments() {
+export default function Comments({ product }) {
 	const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
+	const [user, setUser] = useState([]);
+	const [comment, setComment] = useState("");
+
+	useEffect(() => {
+		viewProfile(decodeJwt().id)
+		.then(res => {
+			setUser(res.data.data)
+		})
+		.catch(error => {
+			console.log(error)
+		})
+	}, [])
+
+	const handleComment = () => {
+		createComment(product, comment, rating)
+		.then(res => {
+			console.log(res)
+		})
+		.catch(err => {
+			console.log(err)
+		})
+	}
+
   const StarRating = () => {
     return (
       <div className="star-rating">
@@ -29,13 +53,14 @@ export default function Comments() {
       </div>
     );
   };
+
 	return (
 		<div className="border-t-2">
 			<div className="inline-flex gap-4 pt-4">
 				<div class="flex-shrink-0">
 					<div class="inline-block relative">
 						<div class="relative w-16 h-16 rounded-full overflow-hidden">
-							<img class="absolute top-0 left-0 w-full h-full bg-cover object-fit object-cover" src={a} alt="Profile picture" />
+							<img class="absolute top-0 left-0 w-full h-full bg-cover object-fit object-cover" src={user.image} alt="Profile picture" />
 							<div class="absolute top-0 left-0 w-full h-full rounded-full shadow-inner"></div>
 						</div>
 						<svg class="fill-current text-white bg-green-600 rounded-full p-1 absolute bottom-0 right-0 w-6 h-6 -mx-1 -my-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -53,20 +78,22 @@ export default function Comments() {
 			</div>
 			<StarRating />
 			<div class="flex w-full items-center justify-center ">
-				<form class="mb-6 w-full grid">
+				<div class="mb-6 w-full grid">
 					<div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
 							<label for="comment" class="sr-only">Your comment</label>
 							<textarea id="comment" rows="6"
 								class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
-								placeholder="Write a comment..." required></textarea>
+								placeholder="Write a comment..." 
+								onChange={(e) => setComment(e.target.value)}></textarea>
 					</div>
 					<div className="flex justify-end items-center">
-						<button type="submit"
+						<button 
+							onClick={() => handleComment()}
 							class="py-2.5 px-4 text-xs font-medium text-center text-white bg-teal-500 rounded-lg focus:ring-4 focus:ring-primary-400 hover:bg-primary-300">
 							Post comment
 						</button>
 					</div>
-				</form>
+				</div>
 			</div>
 		</div>
 	)

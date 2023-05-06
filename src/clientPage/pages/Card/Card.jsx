@@ -7,11 +7,13 @@ import { addToCart, getProducts } from "../../../api/apiServices";
 export default function Card() {
 	const navigate = useNavigate();
 	const [listProduct, setListProduct] = useState([]);
+	const [rating, setRating] = useState([])
 
 	useEffect(() => {
 		getProducts()
 			.then(res => {
-				setListProduct(res.data.data)
+				setListProduct(res.data.data.findProduct)
+				setRating(res.data.data.findComment)
 			})
 			.catch(err => {
 				console.log(err)
@@ -40,7 +42,9 @@ export default function Card() {
 
 	const handleAddToCart = (id, number) => {
 		console.log(id)
-		addToCart(id, number).then(res => {console.log(res)}).then(err => console.log(err))
+		addToCart(id, number)
+		.then(res => {console.log(res)})
+		.then(err => console.log(err))
 	}
 
 	const listData = listProduct.slice(0, showMore.itemsToShow)?.map((val, index) => {
