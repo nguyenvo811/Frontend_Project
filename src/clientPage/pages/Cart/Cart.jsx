@@ -1,11 +1,8 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
-import { FaTrashAlt } from "react-icons/fa";
-import { HiTrash } from "react-icons/hi";
+import React, { useEffect, useState } from "react";
 import FormatPrice from "../../components/FormatPrice/FormatPrice";
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { viewCart, deleteProductFromCart, addToCart, createOrder, decodeJwt, viewProfile, deleteCart } from "../../../api/apiServices";
-import { Label, TextInput } from "flowbite-react";
 import isEmail from "validator/lib/isEmail";
 
 export default function Cart() {
@@ -37,16 +34,15 @@ export default function Cart() {
     }
   }, [])
 
-  const handleRemoveProduct = useCallback((id) => {
+  const handleRemoveProduct = async (id) => {
     deleteProductFromCart(id)
-      .then(res => {
-        console.log(res)
-        setProducts([...res.data.data], products)
+      .then(() => {
+        setProducts(oldProducts => ({...oldProducts, cartItem: oldProducts.cartItem.filter(p => p.product._id != id)}));
       })
       .catch(error => {
         console.log(error)
       })
-  }, [])
+  }
 
   const upadateQuantity = (id, quantity, number) =>{
     const totalQuantity = quantity + number
@@ -162,7 +158,7 @@ export default function Cart() {
   }
 
 
-  const productsCart = useMemo(() => products?.cartItem?.map((val, index) => {
+  const productsCart = products?.cartItem?.map((val, index) => {
     return (
       <div key={index} class="pb-6 mb-2 border-b border-gray-400">
         <div className="flex md:items-center md:justify-center text-sm font-medium mt-6 gap-4">
@@ -223,7 +219,7 @@ export default function Cart() {
         </div>
       </div>
     )
-  }))
+  })
     
 
   return (

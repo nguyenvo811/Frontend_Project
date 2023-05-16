@@ -1,23 +1,29 @@
 import {React, useState, useEffect} from "react";
-import { Link, useNavigate } from "react-router-dom";
-import FormatPrice from "../../components/FormatPrice/FormatPrice";
-import slug from "../../../resources/slug";
-import { addToCart, getProducts } from "../../../api/apiServices";
+import { useLocation, useNavigate } from "react-router-dom";
+import FormatPrice from "../components/FormatPrice/FormatPrice";
+import slug from "../../resources/slug";
+import { addToCart, searchProducts } from "../../api/apiServices";
 
-export default function Card() {
+export default function SearchResult(){
+	const location = useLocation()
 	const navigate = useNavigate();
 	const [listProduct, setListProduct] = useState([]);
 	const [rating, setRating] = useState([])
+	const [error, setError] = useState("")
 
 	useEffect(() => {
-		getProducts()
-			.then(res => {
-				setListProduct(res.data.data)
-			})
-			.catch(err => {
-				console.log(err)
-			})
+		searchProducts(location.state)
+    .then(res => {
+      console.log(res.data.data)
+			setListProduct(res.data.data)
+      // setProducts(oldProducts => ({...oldProducts, cartItem: oldProducts.cartItem.filter(p => p.product._id != id)}));
+    })
+    .catch(error => {
+      console.log(error)
+			setError(error.response.data.message)
+    })
 	}, [])
+  console.log(error)
 
 	const [showMore, setShowMore] = 
 		useState({
@@ -100,10 +106,17 @@ export default function Card() {
 	})
 
 	return (
-		<div className="w-full mx-auto">
+		<div className="w-full mx-auto py-4 pt-10 relative">
+			<div className="pb-4">
+				<span>Products related to 
+					{/* <span className="font-bold"> "{new URLSearchParams(location.search).toString().slice(7, location.search.length).split("+")}"</span> */}
+					<span className="font-bold"> "{location.state}"</span>
+				</span>
+			</div>
 			<div className="grid lg:grid-cols-5 md:grid-cols-3 max-md:grid-cols-3 max-sm:gap-1 gap-4 max-sm:grid-cols-2">
 				{listData}
 			</div>
+      <span className="flex justify-center items-center text-2xl text-gray-500">{error}</span>
 			<div className="flex justify-center items-center duration-700">
 				{
 					listProduct.length > 10 ?

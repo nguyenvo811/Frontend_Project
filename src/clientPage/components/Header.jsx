@@ -21,7 +21,7 @@ export default function Header() {
   const handleShow = () => setShowSearch(!showSearch);
   const [products, setProduct] = useState([]);
   const [openModal, setOpenModal] = useState(false);
-
+  const [open, setOpen] = useState(false);
   const [openFavModal, setOpenFavModal] = useState(false);
 
   const useOnClickOutside = (ref, handler) => {
@@ -86,6 +86,7 @@ export default function Header() {
 
   const handleLogOut = () => {
     localStorage.clear();
+    navigate("/")
     setIsSignIn(false)
   }
 
@@ -104,7 +105,7 @@ export default function Header() {
     getProducts()
     .then(res => {
       console.log(res.data.data)
-      setProduct(res.data.data)
+      setProduct(res.data.data.findProduct)
     })
     .catch(error => {
       console.log(error)
@@ -195,8 +196,29 @@ export default function Header() {
               <li>
                 <a onClick={() => navigate("/")} class="cursor-pointer text-gray-900 dark:text-white hover:underline" aria-current="page">Home</a>
               </li>
-              <li>
-                <a href="#" class="cursor-pointer text-gray-900 dark:text-white hover:underline">Mobile</a>
+              <li onMouseLeave={() => setOpen(false)} className="relative">
+                <a onClick={() => 
+                  navigate({
+                    pathname: slug.MOBILE
+                  })}
+                  onMouseOver={() => setOpen(true)}
+                  class="cursor-pointer text-gray-900 dark:text-white hover:underline">Mobile</a>
+                <div
+                  class={`absolute w-40 flex-col bg-white border-1 py-1 px-4 text-gray-800 shadow-xl ${open ? "block" : "hidden"}`}
+                >
+                  <ul>
+                    <li
+                      class="cursor-pointer my-2 block border-gray-100 py-1 font-semibold text-gray-500 hover:text-gray-900 md:mx-2"
+                      >Apple</li>
+                    <li
+                      class="cursor-pointer my-2 block border-gray-100 py-1 font-semibold text-gray-500 hover:text-gray-900 md:mx-2"
+                      >Samsung</li>
+                    <li
+                      class="cursor-pointer my-2 block border-gray-100 py-1 font-semibold text-gray-500 hover:text-gray-900 md:mx-2"
+                      >OPPO
+                    </li>
+                  </ul>
+                </div>
               </li>
               <li>
                 <a href="#" class="cursor-pointer text-gray-900 dark:text-white hover:underline">Tablet</a>
@@ -205,7 +227,10 @@ export default function Header() {
                 <a href="#" class="cursor-pointer text-gray-900 dark:text-white hover:underline">Speaker</a>
               </li>
               <li>
-                <a href="#" class="cursor-pointer text-gray-900 dark:text-white hover:underline">Smart Watch</a>
+                <a onClick={() => navigate({
+                    pathname: slug.WATCH
+                  }, {state: "s"})} 
+                  class="cursor-pointer text-gray-900 dark:text-white hover:underline">Smart Watch</a>
               </li>
               <li>
                 <a href="#" class="cursor-pointer text-gray-900 dark:text-white hover:underline">Laptop</a>
@@ -250,7 +275,7 @@ const SearchBar = function({ placeholder, data, onClose }) {
   };
   const handleClickDetails = useCallback(async(val) => {
 		navigate({
-			pathname: slug .DETAIL, 
+			pathname: slug.DETAIL, 
 			search: `?_id=${val._id}`
 		})
 	})
@@ -268,16 +293,13 @@ const SearchBar = function({ placeholder, data, onClose }) {
 
   // search
 
-  const [word, setWord] = useState("");
-
-  const search = () => {
-    searchProducts()
-    .then(res => {
-      console.log(res.data.data)
-    })
-    .catch(error => {
-      console.log(error)
-    })
+  const search = (searchWord) => {
+    console.log(searchWord)
+    navigate({
+      pathname: slug.SEARCH, 
+      search: `?search=${searchWord}`
+    }, {state: searchWord})
+    onClose()
   }
 
   const showData = filteredData.length !== 0 && (
@@ -305,7 +327,7 @@ const SearchBar = function({ placeholder, data, onClose }) {
     <div id="searchBar" name="searchBar" className={`relative flex dark:bg-gray-700 z-50 bg-gray-50 dark:bg-gray-700 justify-center`}>
       <div className="mx-auto"> 
         <div className="font-normal border bg-white border-gray-400 rounded-md focus-within:ring sm:flex sm:items-center">
-          <button class="w-full pl-2 text-sm sm:mt-0 sm:w-auto sm:flex-shrink-0">
+          <button onClick={() => search(wordEntered)} class="w-full pl-2 text-sm sm:mt-0 sm:w-auto sm:flex-shrink-0">
             <FaSearch className='cursor-pointer text-gray-400 hover:text-gray-500' size='1rem'/>
           </button>
           <input
@@ -316,7 +338,7 @@ const SearchBar = function({ placeholder, data, onClose }) {
             onChange={handleFilter}
             class="sm:w-[400px] md:h-[40px] rounded-md border-none border-transparent focus:border-transparent focus:ring-0 sm:text-sm"
           />
-          <button onClick={() => search({search: "i"})} type="submit" class="px-2 pl-2 items-center">
+          <button type="submit" class="px-2 pl-2 items-center">
             <AiOutlineClose size="1rem" id="clearBtn" className={`text-gray-400 hover:text-gray-500 ${!wordEntered.length ? "hidden" : ""}`} onClick={clearInput} />
           </button>
         </div>

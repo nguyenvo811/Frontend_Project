@@ -9,7 +9,7 @@ import { Label, Select, Textarea, TextInput } from "flowbite-react";
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { uploadImage } from '../../../assets/Library/uploadFile';
-import { createdata, updateUser } from '../../../api/apiServices';
+import { createdata, updateUser, viewProfile } from '../../../api/apiServices';
 import isEmail from 'validator/lib/isEmail';
 
 export default function UpdateUserModal(props) {
@@ -36,7 +36,6 @@ export default function UpdateUserModal(props) {
 
   const handleImage = (e) => {
     setFile(e.target.files)
-    setError({image: ""})
   }
 
   const [error, setError] = useState({
@@ -64,8 +63,6 @@ export default function UpdateUserModal(props) {
       msg.phoneNumber = "Phone Number field is required!"
     } if (data.role === "") {
       msg.role = "Permission field is required!"
-    } if (!file) {
-      msg.image = "Image field is required!"
     } 
     
     setError(msg)
@@ -94,8 +91,7 @@ export default function UpdateUserModal(props) {
       password: "", 
       fullName: "",
       phoneNumber: "",
-      role: "",
-      image: ""
+      role: ""
     })
     setData({
       email: "",
@@ -120,24 +116,46 @@ export default function UpdateUserModal(props) {
       image: []
     }
 
-    const isValid = validateAll()
-    if (isValid){
+    if (file && file.length > 0) {
       for (let index = 0; index < file.length; index++) {
         const element = file[index];
         const upfile = await uploadImage(element);
         updateData.image.push(upfile.data);
+        console.log(updateData)
         setListUrl(val=>[...val, upfile.data])  
       }
-			tableData[row.index] = updateData
-      await updateUser(data._id, updateData)
-        .then(res => {
-          console.log(res.data.data)
-          setTableData([...tableData])
-          clearState()
-        })
-        .catch((err)=>{
-          console.log(err)
-        }) 
+    }
+
+    const isValid = validateAll()
+    if (isValid){
+      if (data.image.length > 0) {
+        tableData[row.index] = updateData
+        await updateUser(data._id, updateData)
+          .then(() => {
+            viewProfile(data._id)
+            .then(res => {
+              tableData[row.index] = res.data.data;
+              setTableData([...tableData])
+              clearState()
+            })
+          })
+          .catch((err)=>{
+            console.log(err)
+          }) 
+      } else {
+        await updateUser(data._id, updateData)
+          .then(() => {
+            viewProfile(data._id)
+            .then(res => {
+              tableData[row.index] = res.data.data;
+              setTableData([...tableData])
+              clearState()
+            })
+          })
+          .catch((err)=>{
+            console.log(err)
+          }) 
+      }
     }
   }
 
@@ -262,9 +280,6 @@ export default function UpdateUserModal(props) {
                       className="mt-1"                      
                       onChange={(e) => handleImage(e)}
                     />
-                    <p class="mt-1 text-sm text-red-500"> 
-                      {error.image}
-                    </p>
                   </div>
                 </div>
               </form>

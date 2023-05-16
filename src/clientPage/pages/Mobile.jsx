@@ -1,22 +1,36 @@
 import {React, useState, useEffect} from "react";
-import { Link, useNavigate } from "react-router-dom";
-import FormatPrice from "../../components/FormatPrice/FormatPrice";
-import slug from "../../../resources/slug";
-import { addToCart, getProducts } from "../../../api/apiServices";
+import { useLocation, useNavigate } from "react-router-dom";
+import FormatPrice from "../components/FormatPrice/FormatPrice";
+import slug from "../../resources/slug";
+import { addToCart, getProductsByCategoryID } from "../../api/apiServices";
 
-export default function Card() {
+export default function Mobile(){
+	const location = useLocation()
 	const navigate = useNavigate();
-	const [listProduct, setListProduct] = useState([]);
+	const [apple, setApple] = useState([]);
+	const [sámsung, setSamsung] = useState([]);
 	const [rating, setRating] = useState([])
+	const [error, setError] = useState("")
 
 	useEffect(() => {
-		getProducts()
-			.then(res => {
-				setListProduct(res.data.data)
-			})
-			.catch(err => {
-				console.log(err)
-			})
+		getProductsByCategoryID("64141a76ca03c8c137eb607c")
+    .then(res => {
+      console.log(res.data.data)
+			setApple(res.data.data)
+    })
+    .catch(error => {
+      console.log(error)
+			setError(error.response.data.message)
+    })
+
+		getProductsByCategoryID("64155e652aeaf4523a39d8ce")
+    .then(res => {
+      console.log(res.data.data)
+			setSamsung(res.data.data)
+    })
+    .catch(error => {
+      console.log(error)
+    })
 	}, [])
 
 	const [showMore, setShowMore] = 
@@ -25,7 +39,7 @@ export default function Card() {
 	})
 
 	const handleShowMore = () => {
-		if (showMore.itemsToShow < listProduct.length) {
+		if (showMore.itemsToShow < apple.length) {
 			setShowMore({itemsToShow: 10 + showMore.itemsToShow})
 		} else {
 			setShowMore({itemsToShow: 10})
@@ -46,7 +60,7 @@ export default function Card() {
 		.then(err => console.log(err))
 	}
 
-	const listData = listProduct.slice(0, showMore.itemsToShow)?.map((val, index) => {
+	const listData = apple.slice(0, showMore.itemsToShow)?.map((val, index) => {
 		return (
 			<div key={index} id={val._id} class="relative flex w-[250px] max-sm:w-[190px] max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md duration-500 transform sm:hover:-translate-y-2 sm:hover:shadow-xl">
 				<a class="relative mx-3 mt-3 flex justify-center h-[200px] overflow-hidden rounded-xl" onClick={() => handleClickDetails(val)}>
@@ -100,16 +114,44 @@ export default function Card() {
 	})
 
 	return (
-		<div className="w-full mx-auto">
+		<div className="w-full mx-auto py-4 pt-10 relative">
+			<div className="pb-4">
+				<span className="text-xl font-bold">Apple Smart Phone</span>
+			</div>
 			<div className="grid lg:grid-cols-5 md:grid-cols-3 max-md:grid-cols-3 max-sm:gap-1 gap-4 max-sm:grid-cols-2">
 				{listData}
 			</div>
+      <span className="flex justify-center items-center text-2xl text-gray-500">{error}</span>
 			<div className="flex justify-center items-center duration-700">
 				{
-					listProduct.length > 10 ?
+					apple.length > 10 ?
 						<button type="button" className="rounded-md bg-gray-200 px-5 py-2.5 my-4 text-center text-sm font-medium focus:outline-none focus:ring-4 focus:ring-blue-300" onClick={() => handleShowMore()}>
 							{
-								showMore.itemsToShow < listProduct.length ? 
+								showMore.itemsToShow < apple.length ? 
+								<svg class="animate-bounce w-6 h-6 text-gray-500" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+									<path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+								</svg> 
+								: 
+								"Show less"
+							}
+						</button>
+					: null
+				}
+			</div>
+			<div className="pb-4">
+			
+				<span className="text-xl font-bold">Apple Smart Phone</span>
+			</div>
+			<div className="grid lg:grid-cols-5 md:grid-cols-3 max-md:grid-cols-3 max-sm:gap-1 gap-4 max-sm:grid-cols-2">
+				{listData}
+			</div>
+      <span className="flex justify-center items-center text-2xl text-gray-500">{error}</span>
+			<div className="flex justify-center items-center duration-700">
+				{
+					apple.length > 10 ?
+						<button type="button" className="rounded-md bg-gray-200 px-5 py-2.5 my-4 text-center text-sm font-medium focus:outline-none focus:ring-4 focus:ring-blue-300" onClick={() => handleShowMore()}>
+							{
+								showMore.itemsToShow < apple.length ? 
 								<svg class="animate-bounce w-6 h-6 text-gray-500" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
 									<path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
 								</svg> 

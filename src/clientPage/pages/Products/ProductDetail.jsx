@@ -36,13 +36,6 @@ export default function ProductDetail() {
     })
   }, [])
 
-  const slides = [
-    "https://kontakt.az/wp-content/uploads/2022/09/iPhone-14-128-GB-Blue-1_png.webp",
-    "https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/i/p/iphone-14-storage-select-202209-6-1inch-y889.jpg",
-    "https://cdn.tgdd.vn/Products/Images/42/247508/iphone-14-pro-bac-thumb-600x600.jpg",
-    "https://cdn.tgdd.vn/Products/Images/42/240259/iPhone-14-thumb-do-600x600.jpg",
-  ]
-
   const handleAddToCart = (id, number) => {
 		console.log(id)
 		addToCart(id, number)

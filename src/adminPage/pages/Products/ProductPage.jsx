@@ -128,7 +128,7 @@ const ProductTable = function() {
       size: 140,
     },
 		{
-      accessorFn: (originalRow) => <FormatDateTimeDislay date={originalRow?.createdAt} />,
+      accessorFn: (originalRow) => <FormatDateTimeDislay date={originalRow?.updatedAt} />,
 			id: 'updatedAt',
       header: 'Update At',
       size: 140,

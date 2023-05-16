@@ -13,7 +13,6 @@ const decodeJwt = () => {
     if (token) {    
       try {
         const decoded = jwtDecode(token)
-        console.log(decoded)
         const id = decoded._id;
         const role = decoded.role;
         return {id, role}
@@ -115,7 +114,6 @@ const deleteProductFromCart = async (id) => {
     user: decodeJwt().id,
     product: id
   }
-  console.log(data)
   return await axios.delete("http://localhost:8081/delete-from-cart", {headers: {
     "Content-Type": "application/json",
     Authorization: `Bearer ${JSON.parse(localStorage.getItem("Authentication"))}`
@@ -155,8 +153,9 @@ const updateOrder = async (id, data) => {
   return await axios.patch(`http://localhost:8081/update-order/${id}`, data, config)
 }
 
-const searchProducts = async (data) => {
-  return await axios.get("http://localhost:8081/search-products", data)
+const searchProducts = async (search) => {
+  const data = {search: search}
+  return await axios.get(`http://localhost:8081/search-products?${new URLSearchParams(data).toString()}`)
 }
 
 const addToWishLish = async (id, isLiked) => {
@@ -170,9 +169,6 @@ const addToWishLish = async (id, isLiked) => {
 }
 
 const viewWishList = async () => {
-  const data = {
-    user: decodeJwt().id
-  }
   return await axios.get("http://localhost:8081/view-wish-list", {headers: {
     "Content-Type": "application/json",
     Authorization: `Bearer ${JSON.parse(localStorage.getItem("Authentication"))}`

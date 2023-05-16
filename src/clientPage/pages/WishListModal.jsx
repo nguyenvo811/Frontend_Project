@@ -40,7 +40,7 @@ export default function WishListModal(props) {
     deleteProductFromWishList(id)
       .then(res => {
         console.log(res)
-        // setProducts([...res.data.data], products)
+        setProducts(oldProducts => ({...oldProducts, wishListItem: oldProducts.wishListItem.filter(p => p.product._id != id)}));
       })
       .catch(error => {
         console.log(error)

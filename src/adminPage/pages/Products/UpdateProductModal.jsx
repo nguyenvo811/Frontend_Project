@@ -8,7 +8,7 @@ import { Label, Textarea, TextInput } from "flowbite-react";
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { uploadImage } from '../../../assets/Library/uploadFile';
-import { getCategories, updateProduct } from '../../../api/apiServices';
+import { getCategories, searchProduct, updateProduct } from '../../../api/apiServices';
 import Select from 'react-select';
 import { Box, Button } from '@mui/joy';
 
@@ -17,7 +17,6 @@ export default function UpdateProductModal(props) {
   const [listUrl, setListUrl] = useState([]);
   const [file, setFile] = useState(null);
   const [select, setSelect] = useState([]);
-  const [selectCat, setSelectCat] = useState(data?.category?.categoryName);
 
   useEffect( () => {
     getCategories()
@@ -33,13 +32,8 @@ export default function UpdateProductModal(props) {
         })  
   }, []);
 
-  const handleSelect = (e) => {
-    setSelectCat(e.value)
-    setError({category: ""})
-  }
-
   const selectCategory = Object.values(select)?.map(val => {return {value: val._id, label: val.categoryName}})
-  const defaultCategoryName = selectCategory.find((e)=> {return e.value === selectCat});
+  const defaultCategoryName = selectCategory.find((e)=> {return e.value === data?.category?._id});
 
   const descriptionElementRef = useRef(null);
   useEffect(() => {
@@ -51,19 +45,13 @@ export default function UpdateProductModal(props) {
     }
   }, [open]);
 
-  const handleImage = (e) => {
-    setFile(e.target.files)
-    setError({image: ""})
-  }
-
   const [error, setError] = useState({
     productName: "",
     description: "", 
     price: "",
     quantity: "",
     category: "",
-    onSale: "",
-    image: ""
+    onSale: ""
   });
 
   const validateAll = () => {
@@ -80,10 +68,8 @@ export default function UpdateProductModal(props) {
       msg.quantity = "Quantity field is required!"
     } else if (data.quantity < 1) {
       msg.quantity = "Quantity must be greater than 0!"
-    } if (selectCat === "") {
+    } if (data.category === "") {
       msg.category = "Category field is required!"
-    } if (!file) {
-      msg.image = "Image field is required!"
     } if (data.onSale === "") {
       msg.onSale = "On sale field is required!"
     } else if (data.onSale > 99) {
@@ -119,12 +105,12 @@ export default function UpdateProductModal(props) {
       price: "",
       quantity: "",
       category: "",
-      image: "",
       onSale: ""
     })
     setData(data)
     onClose()
   }
+  console.log(data)
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -134,30 +120,53 @@ export default function UpdateProductModal(props) {
       productName: data.productName,
       description: data.description,
       price: data.price,
-      category: selectCat,
+      category: data.category,
       quantity: data.quantity,
       onSale: data.onSale,
       image: []
     }
 
-    const isValid = validateAll()
-    if (isValid){
+    if (file && file.length > 0) {
       for (let index = 0; index < file.length; index++) {
         const element = file[index];
         const upfile = await uploadImage(element);
         updateData.image.push(upfile.data);
+        console.log(updateData)
         setListUrl(val=>[...val, upfile.data])  
       }
-      tableData[row.index] = updateData
-      await updateProduct(data._id, updateData)
-        .then(res => {
-          console.log(res.data.data)
-          setTableData([...tableData])
-          clearState()
-        })
-        .catch((err)=>{
-          console.log(err)
-        }) 
+    }
+
+    const isValid = validateAll()
+    if (isValid){
+      if (updateData.image.length > 0) {
+        tableData[row.index] = updateData
+        await updateProduct(data._id, updateData)
+          .then(() => {
+            searchProduct(data._id)
+            .then(res => {
+              tableData[row.index] = res.data.data.findProduct;
+              setTableData([...tableData])
+              clearState()
+            })
+          })
+          .catch((err)=>{
+            console.log(err)
+          }) 
+      } else {
+        await updateProduct(data._id, updateData)
+          .then(() => {
+            searchProduct(data._id)
+            .then(res => {
+              tableData[row.index] = res.data.data.findProduct;
+              setTableData([...tableData])
+              clearState()
+            })
+          })
+          .catch((err)=>{
+            console.log(err)
+          }) 
+      }
+      
     }
   }
 
@@ -250,7 +259,7 @@ export default function UpdateProductModal(props) {
                       value={selectCategory.value}
                       defaultValue={defaultCategoryName}
                       className="mt-1"
-                      onChange={(e) => handleSelect(e)}
+                      onChange={handleChangeInput}
                       >
                     </Select>
                     <p class="mt-1 text-sm text-red-500"> 
@@ -265,12 +274,11 @@ export default function UpdateProductModal(props) {
                       type="file"
                       className="mt-1"
                       multiple
-                      
-                      onChange={(e) => handleImage(e)}
+                      onChange={(e) => setFile(e.target.files)}
                     />
-                    <p class="mt-1 text-sm text-red-500"> 
+                    {/* <p class="mt-1 text-sm text-red-500"> 
                       {error.image}
-                    </p>
+                    </p> */}
                   </div>
                   <div>
                     <Label htmlFor="quantity">Quantity</Label>

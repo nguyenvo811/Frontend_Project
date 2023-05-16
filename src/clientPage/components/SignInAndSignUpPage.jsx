@@ -155,10 +155,10 @@ export default function SignInAndSignUpPage() {
     const isValid = validateAll()
     if (isValid){
 		return await signIn(data) 
-			.then((res) => { 
+			.then(res => { 
+				console.log(res)
 				handleClose()
-				console.log(res);
-				})
+			})
 			.catch((err)=>{
 				if (err.response) {
 					console.log(err.response.data.result);
