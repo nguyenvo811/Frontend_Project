@@ -12,6 +12,7 @@ export default function Cart() {
   const navigate = useNavigate()
   
   useEffect(() => {
+    window.scrollTo({top:0, behavior: 'smooth'});
     if(decodeJwt()){
       console.log(decodeJwt().id)
       viewProfile(decodeJwt().id)

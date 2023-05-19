@@ -46,9 +46,11 @@ export default function ProductDetail() {
   const handleAddToWishLish = async (id) => {
     console.log(id, fav)
     addToWishLish(id, fav)
-    .then(res => {
-      window.location.reload()
-      console.log(res.data.data)
+    .then(() => {
+      viewWishList()
+      .then(res => {
+        setIsFav(res.data.data)
+      })
     })
     .catch(err => {
       console.log(err)
