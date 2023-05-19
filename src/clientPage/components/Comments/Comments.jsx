@@ -1,8 +1,8 @@
 import {React, useEffect, useState} from "react";
 import a from "../../../assets/a.jpg";
-import { viewProfile, decodeJwt, createComment } from "../../../api/apiServices";
+import { viewProfile, decodeJwt, createComment, searchProduct } from "../../../api/apiServices";
 
-export default function Comments({ product }) {
+export default function Comments({ product, setUserComment }) {
 	const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
 	const [user, setUser] = useState([]);
@@ -20,8 +20,11 @@ export default function Comments({ product }) {
 
 	const handleComment = () => {
 		createComment(product, comment, rating)
-		.then(res => {
-			console.log(res)
+		.then(() => {
+			searchProduct(product)
+			.then(res => {
+				setUserComment(res.data.data.findComment)
+			})
 		})
 		.catch(err => {
 			console.log(err)

@@ -158,6 +158,7 @@ export default function SignInAndSignUpPage() {
 			.then(res => { 
 				console.log(res)
 				handleClose()
+				window.location.reload()
 			})
 			.catch((err)=>{
 				if (err.response) {

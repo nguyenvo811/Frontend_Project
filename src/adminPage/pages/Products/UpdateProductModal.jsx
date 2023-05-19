@@ -17,6 +17,7 @@ export default function UpdateProductModal(props) {
   const [listUrl, setListUrl] = useState([]);
   const [file, setFile] = useState(null);
   const [select, setSelect] = useState([]);
+  const [selectCat, setSelectCat] = useState("");
 
   useEffect( () => {
     getCategories()
@@ -31,6 +32,11 @@ export default function UpdateProductModal(props) {
             }
         })  
   }, []);
+
+  const handleSelect = (e) => {
+    setSelectCat(e.value)
+    setError({category: ""})
+  }
 
   const selectCategory = Object.values(select)?.map(val => {return {value: val._id, label: val.categoryName}})
   const defaultCategoryName = selectCategory.find((e)=> {return e.value === data?.category?._id});
@@ -68,7 +74,7 @@ export default function UpdateProductModal(props) {
       msg.quantity = "Quantity field is required!"
     } else if (data.quantity < 1) {
       msg.quantity = "Quantity must be greater than 0!"
-    } if (data.category === "") {
+    } if (selectCat === "") {
       msg.category = "Category field is required!"
     } if (data.onSale === "") {
       msg.onSale = "On sale field is required!"
@@ -110,7 +116,6 @@ export default function UpdateProductModal(props) {
     setData(data)
     onClose()
   }
-  console.log(data)
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -120,7 +125,7 @@ export default function UpdateProductModal(props) {
       productName: data.productName,
       description: data.description,
       price: data.price,
-      category: data.category,
+      category: selectCat,
       quantity: data.quantity,
       onSale: data.onSale,
       image: []
@@ -259,7 +264,7 @@ export default function UpdateProductModal(props) {
                       value={selectCategory.value}
                       defaultValue={defaultCategoryName}
                       className="mt-1"
-                      onChange={handleChangeInput}
+                      onChange={(e) => handleSelect(e)}
                       >
                     </Select>
                     <p class="mt-1 text-sm text-red-500"> 

@@ -4,10 +4,12 @@ import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { viewCart, deleteProductFromCart, addToCart, createOrder, decodeJwt, viewProfile, deleteCart } from "../../../api/apiServices";
 import isEmail from "validator/lib/isEmail";
+import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
   const [products, setProducts] = useState([]);
   const [user, setUser] = useState([]);
+  const navigate = useNavigate()
   
   useEffect(() => {
     if(decodeJwt()){
@@ -37,7 +39,11 @@ export default function Cart() {
   const handleRemoveProduct = async (id) => {
     deleteProductFromCart(id)
       .then(() => {
-        setProducts(oldProducts => ({...oldProducts, cartItem: oldProducts.cartItem.filter(p => p.product._id != id)}));
+        // setProducts(oldProducts => ({...oldProducts, cartItem: oldProducts.cartItem.filter(p => p.product._id != id)}));
+        viewCart()
+        .then(res => {
+          setProducts(res.data.data)
+        })
       })
       .catch(error => {
         console.log(error)
@@ -48,16 +54,22 @@ export default function Cart() {
     const totalQuantity = quantity + number
     if(totalQuantity < 1){
       deleteProductFromCart(id)
-      .then(res => {
-        console.log(res)
+      .then(() => {
+        viewCart()
+        .then(res => {
+          setProducts(res.data.data)
+        })
       })
       .catch(error => {
         console.log(error)
       })
     } else {
       addToCart(id, number)
-      .then(res => {
-        console.log(res)
+      .then(() => {
+        viewCart()
+        .then(res => {
+          setProducts(res.data.data)
+        })
       })
       .catch(error => {
         console.log(error)
@@ -145,6 +157,7 @@ export default function Cart() {
         deleteCart(products._id)
         .then(res => {
           clearState()
+          navigate("/orders")
           console.log(res.data.data)
         })
         .catch(error => {

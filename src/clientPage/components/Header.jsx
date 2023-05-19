@@ -208,12 +208,27 @@ export default function Header() {
                 >
                   <ul>
                     <li
+                      onClick={() => 
+                      navigate({
+                        pathname: slug.MOBILE,
+                        search: "?_id=apple"
+                      })}
                       class="cursor-pointer my-2 block border-gray-100 py-1 font-semibold text-gray-500 hover:text-gray-900 md:mx-2"
                       >Apple</li>
                     <li
+                      onClick={() => 
+                      navigate({
+                        pathname: slug.MOBILE,
+                        search: "?_id=samsung"
+                      })}
                       class="cursor-pointer my-2 block border-gray-100 py-1 font-semibold text-gray-500 hover:text-gray-900 md:mx-2"
                       >Samsung</li>
                     <li
+                      onClick={() => 
+                      navigate({
+                        pathname: slug.MOBILE,
+                        search: "?_id=oppo"
+                      })}
                       class="cursor-pointer my-2 block border-gray-100 py-1 font-semibold text-gray-500 hover:text-gray-900 md:mx-2"
                       >OPPO
                     </li>

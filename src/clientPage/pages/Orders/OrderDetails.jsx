@@ -11,7 +11,7 @@ import { Box, Button } from '@mui/joy';
 import FormatPrice from '../../../clientPage/components/FormatPrice/FormatPrice';
 
 export default function OrderDetails(props) {
-  const { open, onClose, data, setData, row, tableData, setTableData } = props;
+  const { open, onClose, data} = props;
 
   const formatPrice = (price) => {
     return Intl.NumberFormat("en-US", {
@@ -62,21 +62,25 @@ export default function OrderDetails(props) {
     subTotal: 675
   }
 
-  const productsFav= products.wishListItem.map((val, index) => {
+  const orderDetail = data?.original?.orderDetail.map((val, index) => {
     return (
       <div key={index} class="pb-6 mb-2 rounded-md border px-6 border-gray-900">
         <div className="flex md:items-center md:justify-center text-sm font-medium mt-6 gap-4">
           <div className="h-[140px] w-[200px] max-sm:w-[300px]" >
-            <img className="w-full h-full object-cover rounded-lg" src={val.image} />
+            <img className="w-full h-full object-cover rounded-lg" src={val.product.image[0]} />
           </div> 
-          <div className="grid w-full md:grid-cols-2 gap-2 break-all justify-between md:items-center">
+          <div className="grid w-full sm:grid-cols-3 gap-2 break-all sm:justify-between sm:items-center">
             <div>
               <h2 className="max-sm:hidden">Product Name</h2>
-              <span className="text-gray-700 max-sm:font-bold max-sm:text-lg font-bold">{val.productName}</span>
+              <span className="text-gray-700 max-sm:font-bold max-sm:text-lg font-bold">{val.product.productName}</span>
             </div>
             <div>
               <h2 className="max-sm:hidden">Price</h2>
-              <strong className="text-gray-700"><FormatPrice price={val.price}/></strong>
+              <strong className="text-gray-700"><FormatPrice price={val.product.price}/></strong>
+            </div>
+            <div>
+              <h2 className="max-sm:hidden">Sale</h2>
+              <strong className="text-gray-700">{val.product.onSale}%</strong>
             </div>
           </div>
         </div>
@@ -115,9 +119,9 @@ export default function OrderDetails(props) {
           ref={descriptionElementRef}
           tabIndex={-1}
         >
-            {productsFav}
+            {orderDetail}
             <div class="grid justify-end items-center font-bold ">
-            <span class="title-font font-bold text-2xl text-red-300">Total: <FormatPrice price={products.subTotal}/></span>
+            <span class="title-font font-bold text-2xl text-red-300">Total: <FormatPrice price={data?.original?.subTotal}/></span>
         </div>
         </DialogContentText>
       </DialogContent>

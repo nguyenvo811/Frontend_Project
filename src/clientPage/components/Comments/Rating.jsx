@@ -1,8 +1,7 @@
 import {React, useState} from "react";
-import Comments from "./Comments";
 import { FormatDateTimeDislay } from "../../../assets/FormatDateTimeDisplay";
 
-export default function Rating({ user, product }){
+export default function Rating({ user }){
   console.log(user)
 
   const comment = user?.commentList?.map((val, index) => {
@@ -55,11 +54,8 @@ export default function Rating({ user, product }){
   })
 
   return (
-    <>
-      <Comments product={product} />
-      <div class="w-full">
-        {comment}
-      </div>
-    </>
+    <div class="w-full">
+      {comment}
+    </div>
 	)
 }

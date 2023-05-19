@@ -56,6 +56,8 @@ export default function UpdateOrderModal(props) {
       subTotal: data.subTotal,
       note: data.note,
       orderDetail: data.orderDetail,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
       status: deliStatus,
     }
     console.log(updateData)
@@ -137,7 +139,6 @@ export default function UpdateOrderModal(props) {
                         id="status"
                         name="status"
                         value={deliStatus}
-                        defaultValue={deliStatus}
                         onChange={(e) => setDeliStatus(e.target.value)}
                       >
                         <option>---Select---</option>

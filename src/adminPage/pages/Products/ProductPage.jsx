@@ -66,7 +66,7 @@ const ProductTable = function() {
     // }
     getProducts()
       .then(res => {
-        setTableData(res.data.data)
+        setTableData(res.data.data.findProduct)
         console.log(res.data.data)
       })
       .catch(err => {

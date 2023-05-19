@@ -137,8 +137,11 @@ const createOrder = async (data) => {
   return await axios.post("http://localhost:8081/create-order", body, config)
 }
 
-const viewOrder = async () => {
-  return await axios.get("http://localhost:8081/view-cart", decodeJwt().id, config)
+const viewOrders = async () => {
+  return await axios.get("http://localhost:8081/orders", {headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${JSON.parse(localStorage.getItem("Authentication"))}`
+  }})
 }
 
 const getOrders = async () => {
@@ -197,6 +200,7 @@ const createComment = async (id, comment, rating) => {
   return await axios.post("http://localhost:8081/create-comment", data, config)
 }
 
+
 export {
   decodeJwt,
   signIn,
@@ -220,7 +224,7 @@ export {
   deleteProductFromCart,
   deleteCart,
   createOrder,
-  viewOrder,
+  viewOrders,
   getOrders,
   deleteOrder, 
   updateOrder,

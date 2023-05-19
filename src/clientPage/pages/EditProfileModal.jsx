@@ -9,7 +9,7 @@ import { Label, Select, Textarea, TextInput } from "flowbite-react";
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { uploadImage } from '../../assets/Library/uploadFile';
-import { createdata, updateUser } from '../../api/apiServices';
+import { createdata, updateUser, viewProfile } from '../../api/apiServices';
 import isEmail from 'validator/lib/isEmail';
 
 export default function EditProfileModal(props) {
@@ -37,7 +37,6 @@ export default function EditProfileModal(props) {
 
   const handleImage = (e) => {
     setFile(e.target.files)
-    setError({image: ""})
   }
 
   const [error, setError] = useState({
@@ -62,10 +61,7 @@ export default function EditProfileModal(props) {
       msg.fullName = "Full Name field is required!"
     } if (data.phoneNumber === "") {
       msg.phoneNumber = "Phone Number field is required!"
-    } if (!file) {
-      msg.image = "Image field is required!"
     } 
-    
     setError(msg)
     console.log("validating")
     if (Object.keys(msg).length > 0) {
@@ -91,8 +87,7 @@ export default function EditProfileModal(props) {
       email: "",
       password: "", 
       fullName: "",
-      phoneNumber: "",
-      image: ""
+      phoneNumber: ""
     })
     setData({
       email: "",
@@ -101,6 +96,7 @@ export default function EditProfileModal(props) {
       phoneNumber: ""
     })
     onClose()
+    window.location.reload()
   }
   
   const handleSubmit = async (e) => {
@@ -115,22 +111,41 @@ export default function EditProfileModal(props) {
       image: []
     }
 
-    const isValid = validateAll()
-    if (isValid){
+    if (file && file.length > 0) {
       for (let index = 0; index < file.length; index++) {
         const element = file[index];
         const upfile = await uploadImage(element);
         updateData.image.push(upfile.data);
+        console.log(updateData)
         setListUrl(val=>[...val, upfile.data])  
       }
-      await updateUser(data._id, updateData)
-        .then(res => {
-          console.log(res.data.data)
-          clearState()
-        })
-        .catch((err)=>{
-          console.log(err)
-        }) 
+    }
+
+    const isValid = validateAll()
+    if (isValid){
+      if (data.image.length > 0) {
+        await updateUser(data._id, updateData)
+          .then(() => {
+            viewProfile(data._id)
+            .then(() => {
+              clearState()
+            })
+          })
+          .catch((err)=>{
+            console.log(err)
+          }) 
+      } else {
+        await updateUser(data._id, updateData)
+          .then(() => {
+            viewProfile(data._id)
+            .then(() => {
+              clearState()
+            })
+          })
+          .catch((err)=>{
+            console.log(err)
+          }) 
+      }
     }
   }
 
@@ -237,9 +252,6 @@ export default function EditProfileModal(props) {
                       className="mt-1"                      
                       onChange={(e) => handleImage(e)}
                     />
-                    <p class="mt-1 text-sm text-red-500"> 
-                      {error.image}
-                    </p>
                   </div>
                 </div>
               </form>

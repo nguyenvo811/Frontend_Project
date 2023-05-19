@@ -3,7 +3,7 @@ import MaterialReactTable from 'material-react-table';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import Button from '@mui/joy/Button';
 import Add from '@mui/icons-material/Add';
-import { decodeJwt, getOrders } from "../../../api/apiServices";
+import { decodeJwt, viewOrders } from "../../../api/apiServices";
 import { FormatDateTimeDislay } from "../../../assets/FormatDateTimeDisplay";
 import FormatPrice from "../../components/FormatPrice/FormatPrice";
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -25,9 +25,11 @@ export default function OrderPage() {
 const OrderTable = function() {
 	const [tableData, setTableData] = useState([]);
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
+  const [row, setRow] = useState("")
+
   useEffect(() => {
     if (decodeJwt ()) {
-      getOrders()
+      viewOrders()
       .then(res => {
         setTableData(res.data.data)
         console.log(res.data.data)
@@ -41,7 +43,7 @@ const OrderTable = function() {
 
   const columns = useMemo(() => [
     {
-      accessorFn: (originalRow) => originalRow?.user.fullName,
+      accessorFn: (originalRow) => originalRow?.user?.fullName,
 			id: "fullName",
       header: 'Username',
       size: 140,
@@ -49,6 +51,11 @@ const OrderTable = function() {
     {
       accessorKey: "address",
       header: 'Address',
+      size: 140,
+    },
+    {
+      accessorKey: "note",
+      header: 'Note',
       size: 140,
     },
 		{
@@ -93,7 +100,7 @@ const OrderTable = function() {
       renderRowActions={({ row, table }) => (
         <Box sx={{ display: 'flex', gap: '1rem', WebkitJustifyContent: "center" }}>
           <Tooltip arrow placement="left" title="Edit">
-            <IconButton onClick={() => setOpenDetailsModal(true)}> 
+            <IconButton onClick={() => {return setOpenDetailsModal(true), setRow(row)}}> 
               <button
                 type="button"
                 class="text-blue-700"
@@ -115,7 +122,7 @@ const OrderTable = function() {
         </Box>
       )}
 		/>
-    <OrderDetails open={openDetailsModal} onClose={() => setOpenDetailsModal(false)} />
+    <OrderDetails open={openDetailsModal} onClose={() => setOpenDetailsModal(false)} data={row} />
     </>
   )
 }

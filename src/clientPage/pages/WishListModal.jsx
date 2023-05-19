@@ -9,10 +9,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import { deleteProductFromWishList, viewWishList } from '../../api/apiServices';
 import { Box, Button } from '@mui/joy';
 import FormatPrice from '../components/FormatPrice/FormatPrice';
+import slug from '../../resources/slug';
+import { useNavigate } from 'react-router-dom';
 
 export default function WishListModal(props) {
   const { open, onClose } = props;
-
+  const navigate = useNavigate();
   const descriptionElementRef = useRef(null);
   useEffect(() => {
     if (open) {
@@ -35,6 +37,8 @@ export default function WishListModal(props) {
 		})
 	}, [])
 
+  console.log(products)
+
 	const handleRemoveProduct = (id) => {
     console.log(id)
     deleteProductFromWishList(id)
@@ -47,9 +51,19 @@ export default function WishListModal(props) {
       })
   } 
 
+  const handleClickDetails = (id) => {
+    onClose()
+		navigate({
+			pathname: slug.DETAIL, 
+			search: `?_id=${id}`
+		})
+	}
+
 	const productsFav= products?.wishListItem?.map((val, index) => {
     return (
-      <div key={index} class="pb-6 mb-2 rounded-md border px-6 border-gray-900">
+      <div key={index}
+        onClick={() => handleClickDetails(val.product._id)}
+        class="pb-6 mb-2 rounded-md border px-6 border-gray-900">
         <div className="flex md:items-center md:justify-center text-sm font-medium mt-6 gap-4">
           <div className="h-[160px] w-[300px] max-sm:w-[300px]" >
             <img className="w-full h-full object-cover rounded-lg" src={val.product.image} />

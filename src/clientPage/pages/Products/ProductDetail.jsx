@@ -1,10 +1,10 @@
 import { React, useEffect, useState} from "react";
 import ProductImage from "./ProductImage";
 import Rating from "../../components/Comments/Rating";
-import { HeartSwitch } from "@anatoliygatt/heart-switch";
 import { useLocation } from "react-router-dom";
 import FormatPrice from "../../components/FormatPrice/FormatPrice";
 import queryString from "query-string";
+import Comments from '../../components/Comments/Comments';
 import { addToCart, searchProduct, addToWishLish, viewWishList } from "../../../api/apiServices";
 
 export default function ProductDetail() {
@@ -47,6 +47,7 @@ export default function ProductDetail() {
     console.log(id, fav)
     addToWishLish(id, fav)
     .then(res => {
+      window.location.reload()
       console.log(res.data.data)
     })
     .catch(err => {
@@ -122,6 +123,7 @@ export default function ProductDetail() {
               </div>
             </div>
           </div>
+          <Comments product={product._id} setUserComment={setUserComment} />
           <Rating user={userComment} product={product._id} />
         </div>
       </div>
